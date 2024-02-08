@@ -71,7 +71,7 @@
 
 
 .bg-chisiamo{
-  background-color: #270000;
+  background-color: $c-background;
   display: flex;
   flex-direction:column;
   margin:auto;

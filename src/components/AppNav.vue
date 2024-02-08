@@ -409,7 +409,7 @@ height: 0%;
      
 
       .right-nav1{
-        background-color: #523333;
+        background-color: $c-nav;
         width: 100%;
       }
       

@@ -65,6 +65,7 @@ export default {
 .prenota-servizio {
   height: 100vh;
   overflow: auto;
+  background-color: $c-background;
 }
 h1 {
   margin: 1rem;

@@ -85,7 +85,7 @@
     
 }
 .bg-home{
-    background-color: #270000;
+    background-color: $c-background;
     width: 100vw;
     height: calc(100vh - 230px);
     position: fixed;

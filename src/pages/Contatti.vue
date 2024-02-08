@@ -112,7 +112,7 @@ img{
 }
 .contatti{
   overflow: auto;
-  background-color: #270000;
+  background-color: $c-background;
   position: fixed;
     bottom: 0;
     left: 0;

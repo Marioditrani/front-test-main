@@ -509,20 +509,22 @@ export default {
 h1 {
   margin: 1rem;
   font-size: clamp(1.9rem, 6vw, 2.5rem);
+  text-align: center;
 }
 .container_servizio {
+  
   padding: 3rem 0;
   display: flex;
   flex-direction: column;
   gap: 3rem;
-
-  width: 90%;
+  max-width: 600px;
   margin: 0 auto;
-
   section,
   form {
     background-color: $c-nav;
     padding: 2rem;
+    border: 3px solid white;
+    border-radius: 20px;
     h2 {
       text-transform: uppercase;
     }
@@ -536,12 +538,14 @@ h1 {
       @include dfc;
       width: 100%;
       justify-content: space-between;
+      gap: 10px;
       .month_name {
         text-transform: uppercase;
         padding: 1rem 2rem;
         flex: 1 1 auto;
         border: solid 2px white;
         text-align: center;
+        border-radius: 20px;
       }
       .active {
         background-color: $c-footer-nav;
@@ -562,6 +566,7 @@ h1 {
           border: solid 1px white;
           text-align: center;
           background-color: rgb(48, 6, 6);
+          
         }
       }
       .day_grid {
@@ -592,6 +597,7 @@ h1 {
       justify-content: space-between;
       flex-wrap: wrap;
       opacity: 0;
+      gap: 10px;
       &.visible {
         opacity: 1;
         transition: opacity 0.5s ease-in-out;
@@ -602,6 +608,7 @@ h1 {
         flex: 1 1 auto;
         border: solid 2px white;
         text-align: center;
+        border-radius: 20px;
       }
       .active {
         background-color: $c-footer-nav;
