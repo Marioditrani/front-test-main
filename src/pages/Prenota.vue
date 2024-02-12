@@ -862,7 +862,8 @@ export default {
         position: fixed;
         z-index: 30;
         bottom: 0;
-        width: 70%;
+        width: 100%;
+        padding: 1rem;
         height: calc(100% - 350px);
         display: flex;
         flex-direction: column;
@@ -1355,11 +1356,7 @@ export default {
 }
 
 @media (max-width: 700px) {
-  .content{
-    .tags{
-      flex-direction: column;
-    }
-  }
+ 
   .card-show{
     height: calc(100% - 250px)!important;
   }

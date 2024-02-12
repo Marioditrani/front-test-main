@@ -265,10 +265,8 @@ export default {
       font-size: 30px;
     }
     .cart {
-
       border: 3px solid white;
       background-color: $c-nav;
-      width: 70%;
       border-radius: 30px;
       padding: 1rem;
       margin: 0 auto;
