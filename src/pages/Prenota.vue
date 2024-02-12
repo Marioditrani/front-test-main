@@ -2,9 +2,8 @@
 import { state } from "../state.js";
 import axios from "axios";
 
-
 export default {
-
+  components: {  },
 
   data() {
     return {
@@ -12,6 +11,8 @@ export default {
       arrProduct: [],
       arrCategory: [],
       categoryId: 0,
+      categoryinput: 1,
+      cartinput: 0,
       name: "",
       phone: "",
       time: "",
@@ -34,6 +35,31 @@ export default {
     };
   },
   methods: {
+    cartopen(){
+        if (this.cartinput){
+          this.cartinput = 0
+        }else{
+          this.cartinput = 1
+        }
+        console.log(this.cartinput)
+      },
+    namecategory(n,i){
+        if(this.categoryId==0 && i==0){
+          return'categorie'
+        }
+        i++
+        if(this.categoryId==i && i!==0){
+          return n
+        }
+      },
+    catopen(){
+        if (this.categoryinput){
+          this.categoryinput = 0
+        }else{
+          this.categoryinput = 1
+        }
+        console.log(this.categoryinput)
+      },
     getProduct(cat) {
       (this.categoryId = cat),
         axios
@@ -371,36 +397,30 @@ export default {
 <!-- :class="state.sideCartValue ?  'sub-item-off' : 'sub-item-on tag'" -->
 <template>
   <div class="prenota">
-   
     <div class="prenota-cont">
-      <h1>Prenota il tuo Asporto</h1>
-      <div class="categorie">
-        <div
-          v-for="cat in arrCategory"
-          :key="cat.id"
-          class="category"
-          :class="actvcat == cat.id ? 'category-on' : ''"
-          @click="changeCategory(cat.id)"
-        >
-          <span :class="actvcat == cat.id ? 'span-on' : ''">{{
-            cat.name
-          }}</span>
+      <img src="../assets/img/crop.png" alt="" class="bacchette">
+      <div class="top-prenota">
+        <h1>Prenota il tuo Asporto</h1>
+        <div class="one-category" @click="catopen(categoryinput)" :class="categoryinput ? '': 'cat-off'">
+          <span v-for="(cat,i) in arrCategory" :key="i">{{ namecategory(cat.name, i)}}</span>
+        </div>
+        <div class="categorie" :class="categoryinput ? 'cat-off': ''">
+          <div v-for="(cat, i) in arrCategory" class="category" :class="actvcat == cat.id ? 'category-on' : '', i == 0 ? 'category0' : '',i == 1 ? 'category1' : '', i == 2 ? 'category2' : '',i == 3 ? 'category3' : '',i == 4 ? 'category4' : '',i == 5 ? 'category5' : '',i == 6 ? 'category6' : '' " @click="changeCategory(cat.id)" :key="i"> 
+              <span @click="catopen(categoryinput)" :class="actvcat == cat.id ? 'span-on' : '' ">{{ cat.name }}</span> 
+            </div>
         </div>
       </div>
-      <div class="cart">
-        <div class="top-cart" @click="opencart">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            fill="currentColor"
-            class="bi bi-cart-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
-            />
-          </svg>
+      <div class="cart-close" @click="cartopen(cartinput)" :class="cartinput ?  'cat-off': ''">
+            <span v-if="state.badge" class="badge">{{ state.badge }}</span>
+            <div class="img-cart shadow">
+              <svg   xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16"> <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/> </svg>
+            </div>
+          </div>
+      <div class="cart" :class="cartinput ?  '': 'cat-off'">
+        <div class="top-cart" >
+          <div class="img-cartclose">
+              <svg xmlns="http://www.w3.org/2000/svg"  @click="cartopen(cartinput)"     width="30" height="30" fill="currentColor" class="bi bi-cart-x-fill" viewBox="0 0 16 16"><path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7.354 5.646 8.5 6.793l1.146-1.147a.5.5 0 0 1 .708.708L9.207 7.5l1.147 1.146a.5.5 0 0 1-.708.708L8.5 8.207 7.354 9.354a.5.5 0 1 1-.708-.708L7.793 7.5 6.646 6.354a.5.5 0 1 1 .708-.708z"/></svg>
+            </div>
         </div>
         <div :class="state.sideCartValue ? 'content-cart' : 'ccoff'">
           <div class="" v-if="!state.arrCart.length && !state.sideCartValue">
@@ -414,7 +434,7 @@ export default {
             >
               <div class="top-item">
                 <h4>{{ item.title }}</h4>
-                <div>* {{ item.counter }}</div>
+                <div>X {{ item.counter }}</div>
                 <div>{{ getPrice(item.totprice) }}</div>
                 <svg
                   :class="state.sideCartValue ? 'sub-item-off' : 'sub-item-on'"
@@ -484,10 +504,11 @@ export default {
           v-for="item in arrProduct"
           :key="item.id"
         >
-          <img :src="state.getImageUrl(item.image)" alt="" />
+          <!--<img :src="state.getImageUrl(item.image)" alt="" />-->
+          <img src="../assets/img/imgsushi.png" alt="">
 
-          <div class="title">{{ item.name }}</div>
           <div class="c-tp">
+            <div class="title">{{ item.name }}</div>
             <div class="tags">
               <span>{{ fixtag(item.tags) }}</span>
             </div>
@@ -541,13 +562,16 @@ export default {
               v-if="!selectedItem.expanded && selectedItem.addicted.length"
             >
               <h3>Ingredienti extra:</h3>
-              <span
-                class="tag-pills"
-                v-for="i in selectedItem.addicted"
-                :key="i"
-                @click="removeExtraTagShow(i)"
-                >- {{ i }}</span
-              >
+              <div class="et-c">
+
+                <span
+                  class="tag-pills"
+                  v-for="i in selectedItem.addicted"
+                  :key="i"
+                  @click="removeExtraTagShow(i)"
+                  >- {{ i }}</span
+                >
+              </div>
             </div>
             <div
               class="add-ingredient"
@@ -643,91 +667,164 @@ export default {
   background-color: $c-nav-link;
   border: 2px solid $c-header;
 }
+.extra-tags::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.extra-tags::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: $c-header;
+}
+.extra-tags::-webkit-scrollbar-track {
+  border-radius: 20px;
+  background: rgba(52, 4, 7, 0.786);
+}
+.extra-tags::-webkit-scrollbar-thumb:hover {
+  border-radius: 20px;
+  background-color: $c-nav-link;
+  border: 2px solid $c-header;
+}
+.tags::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.tags::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: $c-header;
+}
+.tags::-webkit-scrollbar-track {
+  border-radius: 20px;
+  background: rgba(52, 4, 7, 0.786);
+}
+.tags::-webkit-scrollbar-thumb:hover {
+  border-radius: 20px;
+  background-color: $c-nav-link;
+  border: 2px solid $c-header;
+}
 .hd {
   box-shadow: 10px 10px 10px black;
 }
+
 
 .prenota {
   overflow: hidden;
   height: 100vh;
   display: flex;
   flex-direction: column;
-
+  background-color: $c-background;
   .prenota-cont {
     overflow: auto;
     height: 100%;
-    padding: 1rem 1rem;
-    h1 {
-      text-align: center;
-      text-transform: uppercase;
-      padding: 1rem;
-      font-size: 30px;
-    }
+    padding: 2rem;
 
+    .top-prenota{
+      display: flex;
+      align-items: center;
+      width: 70%;
+      margin: auto;
+      justify-content: space-between;
+
+      .one-category{
+        background-color: #523333;
+        width: 350px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        margin: 0 auto;
+        z-index: 10;
+        position: relative;
+        border: 5px solid white;
+        border-radius: 50px;
+        margin: 40px 0;
+        span{
+          font-size: 30px;
+          text-align: center;
+          transition: all .5s;
+          text-transform: uppercase;  
+          letter-spacing: .1em;
+        }
+      }
+      h1 {
+        text-align: center;
+        text-transform: uppercase;
+        padding: 1rem;
+        font-size: 40px;
+      }
+    }
+     
+    .bacchette{
+      position: fixed;
+      left: 0;
+      bottom: 2;
+    }
     .main-prenota {
       @include dfc;
-      margin-top: 2rem;
+      margin: 5rem 0;
       flex-wrap: wrap;
       gap: 1rem;
 
       .card-default {
-        width: calc((100% - 2rem) / 2);
-        height: 150px;
+        width: calc((75% - 2rem) / 3);
+        margin-bottom: 60px;
+        @include dfc;
+        align-items: stretch;
+        border-radius: 10px;
+        padding: 20px;
         position: relative;
-        border-radius: 150px 0 0 150px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-end;
-        overflow: hidden;
+        margin: 6rem 1rem;
+        margin-bottom: 130px;
 
         img {
           position: absolute;
-          top: 0;
+          top: -120px;
           left: 0;
-          height: 100%;
-          aspect-ratio: 1;
-          border-radius: 150px;
-          object-fit: cover;
+          right: 0;
+          margin: auto;
+          width: 250px;
         }
         .title {
-          padding: 1rem;
-          text-align: left;
-          width: calc((100% - 150px));
+          font-size: 20px;
+          width: 100% ;
           text-transform: uppercase;
+          z-index: 10001;
         }
         .c-tp {
-          background-color: #410606;
-          border-radius: 10px;
-          width: 100%;
-          height: 100%;
+          background-color: #AB2F2F;
+          position: relative;
+          z-index: 10;
           display: flex;
           flex-direction: column;
+          padding: 1rem 1.5rem;
+          border-radius: 20px;
           justify-content: space-between;
-          align-items: flex-end;
-
-          .tags,
-          .price {
+          
+          .tags,.price {
             border-radius: 10px;
-            width: calc((100% - 150px - 15px));
-            padding-right: 0.5rem;
-            padding-bottom: 0.5rem;
+            width: 100%;
+            padding-bottom: .5rem;
           }
-          .tags {
-            display: flex;
-            padding-top: 0.5rem;
-            padding-right: 0.5rem;
-            span {
-              font-size: 10px;
-              font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-                "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-              font-weight: bold !important;
-            }
+          .tags{
+          display: flex;
+          padding-top: 1.5rem;
+          padding-right: .1rem;
+            span{
+              font-size: 13px;
+              font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+              font-weight: bold!important; 
+                }
           }
           .price {
             width: 100%;
             //border-radius: 10px ;
             text-align: right;
+            padding-top: 0.5rem;
           }
         }
       }
@@ -745,18 +842,17 @@ export default {
       .card-show {
         position: fixed;
         z-index: 30;
-        right: 0;
         bottom: 0;
         width: 70%;
-        height: 70%;
+        height: calc(100% - 350px);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         align-items: center;
         gap: 2rem;
-
+        margin-bottom: 1rem;
         h3 {
-          font-size: 25px;
+          font-size: 20px;
           text-transform: uppercase;
         }
 
@@ -772,7 +868,7 @@ export default {
           }
           img {
             width: 30%;
-            margin-bottom: -80px;
+            margin-bottom: -50px;
             z-index: 40;
             aspect-ratio: 1;
             object-fit: cover;
@@ -782,44 +878,68 @@ export default {
         .content {
           background-color: $c-nav;
           width: 100% !important;
-          padding: 2rem 0rem;
-          padding-top: 100px;
-          width: 90%;
+          padding:60px 0rem 1rem;
+          overflow: auto;
+          height: 100%;
           @include dfj;
-          gap: 2rem;
+          border-radius: 20px;
           flex-direction: column;
-
-          align-content: flex-end;
+          justify-content: flex-end;
+          align-content: flex-start;
 
           .tags {
             overflow: auto;
-
+            background-color: rgba(0, 0, 0, 0.191);
             padding: 1rem;
-            min-height: 150px;
+            max-height: 25vh;
+
             display: flex;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 3px;
-            h3 {
-              width: 100%;
+            //flex-direction: column;
+            align-items: center;
+            gap: 13px;
+            column-gap: 5px;
+            h3{
+
+              margin-right: 20px ;
             }
             .tag-pills {
+              white-space: nowrap;
+              display: block;
+              width: 100% !important;
               background-color: $c-panna;
               color: $c-nav !important;
             }
           }
           .extra-tags {
-            @include dfj;
-            flex-direction: column;
+            background-color: rgba(0, 0, 0, 0.191);
+            padding:1rem;
             width: 100%;
-            gap: 0.4rem;
+            overflow: auto;
+            max-height: 25vh;
+            .et-c{
+              gap: 13px;
+              flex-direction: column;
+              @include dfj;
+            }
+            h3{
+             
+              color: white  !important;
+              margin-bottom: 15px;
+            }
+            
+            .tag-pills {
+              background-color: $c-header;
+              
+            }
           }
           .add-ingredient {
+            
+            align-self: flex-end;
             position: relative;
             width: 100%;
             background-color: $c-panna;
             padding: 1rem;
-            max-height: 300px;
+            max-height: 50vh;
             overflow: auto;
 
             .cont_ex_ing {
@@ -869,16 +989,21 @@ export default {
           }
 
           .add {
+            margin-top: 1rem;
+            font-size: clamp(20px, 3vw, 25px);
+            align-self: center;
             @include dfc;
-            gap: 2rem;
+            width: 100%;
+            justify-content: space-around;
+            font-size: 18px;
             .sec {
               @include dfc;
-              gap: 0.5rem;
-
+              gap: 15px;
+              
               .plus,
               .minus {
-                height: 2rem;
-                width: 2rem;
+                height: 30px;
+                width: 30px;
                 @include dfc;
                 border: 2px solid white;
                 border-radius: 20px;
@@ -892,13 +1017,14 @@ export default {
               border: 2px solid white;
               border-radius: 20px;
             }
+            
           }
         }
       }
       .close {
         background-color: $c-nav;
         position: absolute;
-        top: 100px;
+        top: -50px;
         left: 10px;
         height: 40px;
         width: 40px;
@@ -937,69 +1063,99 @@ export default {
 /*** */
 
 .categorie {
-  max-width: 450px;
-  width: 100%;
-  height: 160px;
+  box-shadow: -40px 50px 100px black ;
+  background-color: #523333;
+  max-width: 500px;
+  width: 90%;
+  height: 300px;
   border-radius: 4px;
-  padding-bottom: 0.4rem;
-  margin: 0 auto;
   display: flex;
+  flex-direction: column;
   gap: 5px;
+  padding: 1.5em 1em;
+  margin: 0 auto;
+  z-index: 10;
+  position: relative;
+  border: 5px solid white;
+  border-radius: 20px;
   .category {
-    height: 100%;
-    flex: 1;
-    overflow: hidden;
-    cursor: grab;
-    border-radius: 2px;
-    transition: all 0.5s;
-    background-color: $c-footer-nav;
-    border: 1px solid $c-nav-link;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    span {
-      min-width: 14em;
-      padding: 0.5em;
-      text-align: center;
-      transform: rotate(-90deg);
-      transition: all 0.5s;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: $c-nav-link;
-    }
+   height: 100%;
+   flex: 1;
+   overflow: hidden;
+   cursor:grab;
+   border-radius: 2px;
+   transition: all .5s;
+   background-color: #D53C3C75 ;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   span {
+    min-width: 30em;
+    padding: .5em;
+    text-align: center;
+    transition: all .5s;
+    text-transform: uppercase;
+    color: $c-nav-link;
+    letter-spacing: .1em;
+   }
   }
-  .category:hover {
-    flex: 5;
-    background-color: $c-header !important;
-  }
-  .category:hover span {
-    color: white;
-    transform: rotate(0);
-  }
+  
 }
 
-.category-on {
-  flex: 2 !important;
-  background-color: $c-header !important;
-}
-.category-on:hover {
-  flex: 5 !important;
-  background-color: $c-header !important;
-}
+
+
 .span-on {
   color: white !important;
 }
 /***** */
+.cart-close{
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 0;
+  position: fixed;
+  right: 15px;
+  bottom: 0;
+  z-index: 29;
+  
+  .img-cart{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #523333;
+    width: 70px;
+    height: 70px;
+    border: 3px solid white;
+    border-radius: 50px;
+  }
+  .badge{
+    color: white;
+    background-color:#AB2F2F;
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    @include dfc;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    
+  }
+}
 .cart {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  margin-bottom: 10px;
+  bottom: 0;
+  right: 0;
+  z-index: 12000;
+  box-shadow: -40px 50px 100px black ;
   color: $c-nav-link;
-
-  border: 1px solid $c-nav-link;
-  background-color: $c-header;
-  max-width: 450px;
-  width: 100%;
-  border-radius: 4px;
-  padding: 0.4rem;
-  margin: 0 auto;
+  border: 3px solid white;
+  background-color: #523333;
+  width: 50%;
+  border-radius: 50px;
+  padding: 1.5rem;
+  font-size: 18px;
   .top-cart {
     padding: 0.2rem;
     @include dfc;
@@ -1093,17 +1249,41 @@ export default {
         width: 100% !important;
       }
     }
-    .removed {
-      // border: 2px solid rgb(11, 116, 71);
-    }
-    .addicted {
-      // border: 2px solid rgb(113, 11, 116);
-    }
+
   }
 
   svg {
     width: 90%;
   }
+}
+.category0{
+  background-color:rgba(213, 60, 60, 0.46)!important;
+
+}
+.category1{
+  background-color:rgba(213, 60, 60, 0.40)!important;
+}
+.category2{
+  background-color:rgba(213, 60, 60, 0.34)!important;
+}
+.category3{
+  background-color:rgba(213, 60, 60, 0.28)!important;
+}
+.category4{
+  background-color:rgba(213, 60, 60, 0.22)!important;
+}
+.category5{
+  background-color:rgba(213, 60, 60, 0.16)!important;
+}
+.category6{
+  background-color:rgba(213, 60, 60, 0.10)!important;
+}
+.category-on {
+  
+  background-color: rgba(213, 60, 60,);
+}
+.cat-off{
+  display: none!important;
 }
 
 @media (max-width: $bp1) {

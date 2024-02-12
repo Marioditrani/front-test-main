@@ -130,7 +130,7 @@ export default {
             >
               <div class="top-item">
                 <h4>{{ item.title }}</h4>
-                <div>* {{ item.counter }}</div>
+                <div>X {{ item.counter }}</div>
                 <div>{{ getPrice(item.totprice) }}</div>
                 <svg
                   :class="state.sideCartValue ? 'sub-item-off' : 'sub-item-on'"
@@ -219,20 +219,20 @@ export default {
 <style scoped lang="scss">
 @use "../assets/styles/general.scss" as *;
 
-.prenota-cont::-webkit-scrollbar {
+.prenota::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-.prenota-cont::-webkit-scrollbar-thumb {
+.prenota::-webkit-scrollbar-thumb {
   border-radius: 20px;
   background: $c-header;
 }
-.prenota-cont::-webkit-scrollbar-track {
+.prenota::-webkit-scrollbar-track {
   border-radius: 20px;
   background: rgba(52, 4, 7, 0.786);
 }
-.prenota-cont::-webkit-scrollbar-thumb:hover {
+.prenota::-webkit-scrollbar-thumb:hover {
   border-radius: 20px;
   background-color: $c-nav-link;
   border: 2px solid $c-header;
@@ -247,16 +247,18 @@ export default {
   }
 }
 .prenota {
-  overflow: hidden;
+  overflow: auto;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 70%;
-
+  width: 100%;
+  background-color: $c-background;
   .prenota-cont {
-    overflow: auto;
+    
     height: 100%;
     padding: 1rem 1rem;
+    width: 70%;
+    margin: auto;
     h1 {
       text-align: center;
       text-transform: uppercase;
@@ -264,13 +266,12 @@ export default {
       font-size: 30px;
     }
     .cart {
-      color: $c-nav-link;
 
-      border: 1px solid $c-nav-link;
-      background-color: $c-header;
-      width: 90%;
-      border-radius: 4px;
-      padding: 0.4rem;
+      border: 3px solid white;
+      background-color: $c-nav;
+      width: 70%;
+      border-radius: 30px;
+      padding: 1rem;
       margin: 0 auto;
       .top-cart {
         padding: 0.2rem;
