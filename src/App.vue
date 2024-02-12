@@ -54,6 +54,7 @@ body{
     overflow: auto;
     height: 100% ;
     margin-top: 230px;
+    padding-bottom: 50vh;
 }
 
 
