@@ -30,6 +30,7 @@ export default {
         counter: 1,
         expanded: 0,
         opened: false,
+        category_slot : "",
       },
       arrCorrectIngredient: [],
     };
@@ -107,7 +108,7 @@ export default {
         return elemento !== stringaDaEliminare;
       });
     },
-    openShow(name, id, tags, price, image) {
+    openShow(name, id, tags, price, image, cat) {
       this.selectedItem.name = name;
       this.selectedItem.id = id;
       this.selectedItem.tags = tags;
@@ -116,12 +117,19 @@ export default {
       this.selectedItem.opened = true;
       this.arrCorrectIngredient = [];
       this.openIng();
+      this.arrCategory.forEach(element => {
+        if(element.id == cat){
+          this.selectedItem.category_slot = element.slot;
+
+        } 
+      });
     },
     closeShow() {
       this.selectedItem.name = "";
       this.selectedItem.id = "";
       this.selectedItem.tags = [];
       this.selectedItem.deselected = [];
+      this.selectedItem.category_slot = "";
       this.selectedItem.addicted = [];
       this.selectedItem.image = "";
       this.selectedItem.price = 0;
@@ -194,7 +202,7 @@ export default {
       });
     },
 
-    newItem(p_id, title, counter, totprice, addicted, deselected) {
+    newItem(p_id, title, counter, totprice, addicted, deselected, slot) {
       let newitem = {
         p_id,
         title,
@@ -202,6 +210,7 @@ export default {
         totprice,
         deselected,
         addicted,
+        slot
       };
       return newitem;
     },
@@ -277,7 +286,8 @@ export default {
             this.selectedItem.price_variation) *
             this.selectedItem.counter,
           this.selectedItem.addicted,
-          this.selectedItem.deselected
+          this.selectedItem.deselected,
+          this.selectedItem.category_slot,
         );
 
         this.state.arrCart.push(newitem);
@@ -359,9 +369,11 @@ export default {
     },
     getTot() {
       this.state.totCart = 0;
+      this.state.nPezzi = 0;
       this.state.arrCart.forEach((element) => {
         this.state.totCart = this.state.totCart + element.totprice;
-      });
+        this.state.nPezzi += parseInt(element.slot) * element.counter
+      }); 
     },
     openIng() {
       let obs = false;
@@ -401,28 +413,27 @@ export default {
       <img src="../assets/img/crop.png" alt="" class="bacchette">
       <div class="top-prenota">
         <h1>Prenota il tuo Asporto</h1>
-        <div class="one-category" @click="catopen(categoryinput)" :class="categoryinput ? '': 'cat-off'">
+        <div class="one-category" @click="catopen" :class="categoryinput ? '': 'cat-off'">
           <span v-for="(cat,i) in arrCategory" :key="i">{{ namecategory(cat.name, i)}}</span>
         </div>
         <div class="categorie" :class="categoryinput ? 'cat-off': ''">
           <div v-for="(cat, i) in arrCategory" class="category" :class="actvcat == cat.id ? 'category-on' : '', i == 0 ? 'category0' : '',i == 1 ? 'category1' : '', i == 2 ? 'category2' : '',i == 3 ? 'category3' : '',i == 4 ? 'category4' : '',i == 5 ? 'category5' : '',i == 6 ? 'category6' : '' " @click="changeCategory(cat.id)" :key="i"> 
-              <span @click="catopen(categoryinput)" :class="actvcat == cat.id ? 'span-on' : '' ">{{ cat.name }}</span> 
+              <span @click="catopen" :class="actvcat == cat.id ? 'span-on' : '' ">{{ cat.name }}</span> 
             </div>
         </div>
       </div>
-      <div class="cart-close" @click="cartopen(cartinput)" :class="cartinput ?  'cat-off': ''" v-if="!selectedItem.opened">
-            <span v-if="state.badge" class="badge">{{ state.badge }}</span>
+      <div class="cart-close" @click="cartopen" :class="cartinput ?  'cat-off': ''" v-if="!selectedItem.opened">
+            <span v-if="state.arrCart.length > 0" class="badge">{{ state.arrCart.length }}</span>
             <div class="img-cart shadow">
-              <svg   xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16"> <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/> </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16"> <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/> </svg>
             </div>
           </div>
       <div class="cart" :class="cartinput ?  '': 'cat-off'">
-        <div class="top-cart" >
-          <div class="img-cartclose">
-              <svg xmlns="http://www.w3.org/2000/svg"  @click="cartopen(cartinput)"     width="30" height="30" fill="currentColor" class="bi bi-cart-x-fill" viewBox="0 0 16 16"><path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM7.354 5.646 8.5 6.793l1.146-1.147a.5.5 0 0 1 .708.708L9.207 7.5l1.147 1.146a.5.5 0 0 1-.708.708L8.5 8.207 7.354 9.354a.5.5 0 1 1-.708-.708L7.793 7.5 6.646 6.354a.5.5 0 1 1 .708-.708z"/></svg>
-            </div>
-        </div>
+
+        
+        
         <div :class="state.sideCartValue ? 'content-cart' : 'ccoff'">
+          <span @click="cartopen(cartinput)" class="close-cart">chiudi</span>
           <div class="" v-if="!state.arrCart.length && !state.sideCartValue">
             Il carrello è vuoto
           </div>
@@ -485,13 +496,13 @@ export default {
                 {{ getPrice(state.totCart) }}
               </span>
             </div>
+            <router-link
+              :to="{ name: 'conferma' }"
+              v-if="state.arrCart.length && !state.sideCartValue"
+              class="next"
+              >Completa la tua ordinazione</router-link
+            >
           </div>
-          <router-link
-            :to="{ name: 'conferma' }"
-            v-if="state.arrCart.length && !state.sideCartValue"
-            class="next"
-            >Completa la tua ordinazione</router-link
-          >
         </div>
       </div>
 
@@ -499,7 +510,7 @@ export default {
         <div
           class="card-default"
           @click="
-            openShow(item.name, item.id, item.tags, item.price, item.image)
+            openShow(item.name, item.id, item.tags, item.price, item.image, item.category_id)
           "
           v-for="item in arrProduct"
           :key="item.id"
@@ -538,7 +549,7 @@ export default {
           </div>
 
           <div class="content">
-            <div class="tags" v-if="!selectedItem.expanded">
+            <div class="tags" v-if="!selectedItem.expanded && selectedItem.category_slot > 0">
               <h3>Modifica ingredienti:</h3>
               <div v-for="tag in selectedItem.tags" :key="tag.name">
                 <span
@@ -557,9 +568,16 @@ export default {
                 >
               </div>
             </div>
+            <div class="description" v-if="selectedItem.category_slot == 0">
+              <h3>Descrizione:</h3>
+              <div class="desc">
+                <span class="def_tag" >{{ fixtag(selectedItem.tags) }}</span>
+                <!-- <span v-for="tag in selectedItem.tags" :key="tag.name" > {{ tag.name }}</span> -->
+              </div>
+            </div>
             <div
               class="extra-tags"
-              v-if="!selectedItem.expanded && selectedItem.addicted.length"
+              v-if="!selectedItem.expanded && selectedItem.addicted.length && selectedItem.category_slot > 0"
             >
               <h3>Ingredienti extra:</h3>
               <div class="et-c">
@@ -576,10 +594,11 @@ export default {
             <div
               class="add-ingredient"
               :class="selectedItem.expanded ? '' : 'add-off'"
+              v-if="selectedItem.category_slot > 0"
             >
               <img
                 :class="selectedItem.expanded ? 'open' : ''"
-                v-if="selectedItem.expanded"
+                v-if="selectedItem.expanded "
                 @click="selectedItem.expanded = !selectedItem.expanded"
                 src="../assets/img/plus.png"
                 alt=""
@@ -888,6 +907,10 @@ export default {
           align-content: flex-start;
           border: 3px solid white;
 
+          .description{
+            margin: 2rem;
+          }
+
           .tags {
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.191);
@@ -1158,28 +1181,27 @@ export default {
   border-radius: 50px;
   padding: 1.5rem;
   font-size: 18px;
-  .top-cart {
-    padding: 0.2rem;
-    @include dfc;
-    justify-content: space-between;
+  max-height: 80vh;
+  overflow: auto;
+  
   }
-}
+
 .next {
   border: 2px solid white;
   text-transform: uppercase;
   padding: 5px;
   text-align: center;
   border-radius: 5px;
+
 }
 .content-cart {
   height: 0;
-  padding: 0rem;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   transition: all 0.2s linear;
 }
 .ccoff {
-  padding: 1rem;
   height: 100%;
   display: block;
   transition: all 0.2s linear;
@@ -1187,6 +1209,18 @@ export default {
   flex-direction: column;
   gap: 2rem;
   text-transform: uppercase;
+  .close-cart{
+     position: sticky;
+      top: 10px;
+      left: 10px;
+      height: 50px;
+      color: white;
+      background-color: $c-header;
+      padding: 10px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.199);
+    }
   .top-content-cart {
     display: flex;
     flex-direction: column;
@@ -1198,9 +1232,19 @@ export default {
       background-color: rgba(255, 255, 255, 0);
       text-align: center;
     }
+    
   }
   .bottom-content-cart {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    
+    gap: 10px;
+    .next{
+      width: 100%;
+    }
     .totcart {
+      width: 100%;
       display: flex;
       justify-content: space-between;
     }

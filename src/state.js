@@ -4,10 +4,10 @@ export const state = reactive({
   sideMenuValue: 0,
   sideCartValue: 0,
   infomenu: 0,
-
   arrCart: [],
   arrVariation: [],
-
+  maxPezzi: 0,
+  nPezzi: 0,
   totCart: 0,
   //setting:[],
   setting: [{ status: 1 }, { status: 1 }, { status: 1 }],

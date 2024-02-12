@@ -66,6 +66,7 @@ export default {
   height: 100vh;
   overflow: auto;
   background-color: $c-background;
+  padding: 1rem;
 }
 h1 {
   margin: 1rem;

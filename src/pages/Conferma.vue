@@ -67,10 +67,11 @@ export default {
     },
     getTot() {
       this.state.totCart = 0;
+      this.state.nPezzi = 0;
       this.state.arrCart.forEach((element) => {
-        console.log(element.totprice);
         this.state.totCart = this.state.totCart + element.totprice;
-      });
+        this.state.nPezzi += parseInt(element.slot) * element.counter
+      }); 
     },
     getPrice(cent, sum) {
       if (sum) {
@@ -254,11 +255,9 @@ export default {
   width: 100%;
   background-color: $c-background;
   .prenota-cont {
-    
     height: 100%;
-    padding: 1rem 1rem;
-    width: 70%;
-    margin: auto;
+    padding: 1rem;
+    margin: 0 auto;
     h1 {
       text-align: center;
       text-transform: uppercase;
