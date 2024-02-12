@@ -410,7 +410,7 @@ export default {
             </div>
         </div>
       </div>
-      <div class="cart-close" @click="cartopen(cartinput)" :class="cartinput ?  'cat-off': ''">
+      <div class="cart-close" @click="cartopen(cartinput)" :class="cartinput ?  'cat-off': ''" v-if="!selectedItem.opened">
             <span v-if="state.badge" class="badge">{{ state.badge }}</span>
             <div class="img-cart shadow">
               <svg   xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16"> <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/> </svg>
@@ -728,7 +728,7 @@ export default {
 
       .one-category{
         background-color: #523333;
-        width: 350px;
+        min-width: 350px;
         height: 80px;
         display: flex;
         align-items: center;
@@ -886,13 +886,14 @@ export default {
           flex-direction: column;
           justify-content: flex-end;
           align-content: flex-start;
+          border: 3px solid white;
 
           .tags {
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.191);
             padding: 1rem;
             max-height: 25vh;
-
+            
             display: flex;
             //flex-direction: column;
             align-items: center;
@@ -1286,9 +1287,33 @@ export default {
   display: none!important;
 }
 
-@media (max-width: $bp1) {
-  .card-show {
-    width: 100% !important;
+@media (max-width: 1400px) {
+  .card-default{
+    width: calc((70% - 3rem) / 2)!important;
+  }
+}
+@media (max-width: 1050px) {
+  .card-default{
+    width: 70% !important;
+  }
+  .bacchette{
+    display: none!important;
+  }
+  .top-prenota{
+    display: flex;
+    flex-direction: column;
+  }
+  
+}
+
+@media (max-width: 700px) {
+  .content{
+    .tags{
+      flex-direction: column;
+    }
+  }
+  .card-show{
+    height: calc(100% - 250px)!important;
   }
 }
 @media (max-width: $bp2) {
