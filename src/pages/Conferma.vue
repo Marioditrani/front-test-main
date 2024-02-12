@@ -390,6 +390,11 @@ export default {
     flex-direction: column !important;
   }
 }
+@media (max-width: 800px) {
+  .cart{
+    width: 100%!important;
+  }
+}
 
 .actv {
   color: $c-header;

@@ -1148,6 +1148,7 @@ export default {
   margin-bottom: 10px;
   bottom: 0;
   right: 0;
+  margin: 2rem;
   z-index: 12000;
   box-shadow: -40px 50px 100px black ;
   color: $c-nav-link;
@@ -1303,7 +1304,10 @@ export default {
     display: flex;
     flex-direction: column;
   }
-  
+  .cart{
+    width: 70%;
+   
+  }
 }
 
 @media (max-width: 700px) {
@@ -1314,6 +1318,14 @@ export default {
   }
   .card-show{
     height: calc(100% - 250px)!important;
+  }
+}
+@media (max-width: 560px) {
+  .cart{
+    width: 85%;
+    height: calc(100% - 200px);
+    overflow: auto;
+  
   }
 }
 @media (max-width: $bp2) {

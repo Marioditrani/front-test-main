@@ -191,10 +191,6 @@
     .main-about{
   
       .top-about{
-        .cuoco1{
-          width: 200px!important;
-        
-        }
         h1{
           font-size: 70px;
         }
@@ -219,6 +215,9 @@
   }
 }
 @media (max-width:530px){
+  .cuoco1{
+        width: 300px!important;
+      }
 
 .about{
 
@@ -227,9 +226,7 @@
         padding: 0rem!important;
       }
     .top-about{
-      .cuoco1{
-        width: 170px!important;
-      }
+      
       h1{
         font-size: 50px;
       }
@@ -237,28 +234,14 @@
   }
 }
 }
-@media (max-width:430px){
-.bacchette{
-  display: none;
-}
-.about{
-
-  .main-about{
-    
-    .top-about{
-      flex-direction: column-reverse;
-      align-items: center;
-      gap: 1rem;
-      .cuoco1{
-        
-        
-      }
-      h1{
-        font-size: 50px;
-      }
-    }
+@media (max-width:780px){
+  .top-about{
+    flex-direction: column-reverse!important;
+    align-items: center!important;
   }
-}
+  .post{
+    flex-direction: column!important;
+  }
 }
 
 
