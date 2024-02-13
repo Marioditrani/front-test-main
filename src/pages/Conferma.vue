@@ -258,6 +258,7 @@ export default {
     height: 100%;
     padding: 1rem;
     margin: 0 auto;
+    width: 100%;
     h1 {
       text-align: center;
       text-transform: uppercase;
@@ -380,9 +381,6 @@ export default {
 }
 
 @media (max-width: $bp2) {
-  .card {
-    width: 95% !important;
-  }
   .month-container {
     flex-direction: column !important;
   }
