@@ -849,7 +849,7 @@ export default {
       }
       .overlay {
         position: fixed;
-        z-index: 20;
+        z-index: 101;
         right: 0;
         bottom: 0;
         top: 0;
@@ -860,7 +860,7 @@ export default {
       }
       .card-show {
         position: fixed;
-        z-index: 30;
+        z-index: 101;
         bottom: 0;
         width: 100%;
         padding: 10px;
@@ -870,6 +870,7 @@ export default {
         justify-content: flex-end;
         align-items: center;
         gap: 2rem;
+        height: 80vh;
         h3 {
           font-size: 20px;
           text-transform: uppercase;
@@ -1357,7 +1358,7 @@ export default {
 @media (max-width: 700px) {
  
   .card-show{
-    height: calc(100% - 100px)!important;
+    
   }
 }
 @media (max-width: 560px) {
