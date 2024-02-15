@@ -863,14 +863,13 @@ export default {
         z-index: 30;
         bottom: 0;
         width: 100%;
-        padding: 1rem;
+        padding: 10px;
         height: calc(100% - 350px);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         align-items: center;
         gap: 2rem;
-        margin-bottom: 1rem;
         h3 {
           font-size: 20px;
           text-transform: uppercase;
@@ -1358,7 +1357,7 @@ export default {
 @media (max-width: 700px) {
  
   .card-show{
-    height: calc(100% - 250px)!important;
+    height: calc(100% - 100px)!important;
   }
 }
 @media (max-width: 560px) {
