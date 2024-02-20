@@ -64,7 +64,12 @@
         </div>
         <div class="card2-right">
             <h1>DOVE TROVARCI</h1>
-            <a href="https://www.google.com/maps/place/Kojo+Sushi/@43.5855969,13.308124,17.75z/data=!4m6!3m5!1s0x132d9d63861ba9c3:0x9a352a43c5be1c0e!8m2!3d43.5851992!4d13.3073426!16s%2Fg%2F11kjgq2ccy?hl=it&entry=ttu"><img src="../assets/img/maps.png" alt=""></a>
+            <div class="img">
+              <a href="https://www.google.com/maps/place/Kojo+Sushi/@43.5855969,13.308124,17.75z/data=!4m6!3m5!1s0x132d9d63861ba9c3:0x9a352a43c5be1c0e!8m2!3d43.5851992!4d13.3073426!16s%2Fg%2F11kjgq2ccy?hl=it&entry=ttu"><p>tocca qui</p></a>
+              
+              <div class="overlay"></div>
+            </div>
+            <a href="https://www.google.com/maps/place/Kojo+Sushi/@43.5855969,13.308124,17.75z/data=!4m6!3m5!1s0x132d9d63861ba9c3:0x9a352a43c5be1c0e!8m2!3d43.5851992!4d13.3073426!16s%2Fg%2F11kjgq2ccy?hl=it&entry=ttu"></a>
         </div>
 
       </div>
@@ -205,11 +210,34 @@ img{
       .card2-right{
         width: 50%;
         text-align: center;
-        padding-top: 300px;
+        padding: 300px 20px 20px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        justify-content: center;
 
-        img{
-          padding: 20px 0;
-          max-width: 500px;
+        .img{
+          background-image: url('../assets/img/maps.png');
+          background-size: cover;
+          background-repeat: no-repeat;
+          box-shadow: -7px -7px 20px black;
+          position: relative;
+          aspect-ratio: 1.25;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          p{
+          position: relative;
+          z-index: 3;
+          font-size: 30px;
+          text-transform: uppercase;
+        }
+        .overlay{
+          background-color: rgba(0, 0, 0, 0.495);
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
         }
       }
     }
@@ -236,6 +264,13 @@ img{
 
 
 @media (max-width:$bp1) {.btn-menu{display:block;}}
+
+
+@media (max-width: 1300px){
+  .card1{
+    padding-top:0px!important;
+  }
+}
 
 @media (max-width:850px){
   
@@ -271,17 +306,17 @@ img{
     }
     .card2-right{
       padding-top: 100px!important;
+      justify-content: center!important;
       width: 100%!important;
-      
+      align-items: center;
+      .img{
+        width: 500px;
+      }
     }
   }
 }
-@media (max-width: 1300px){
-  .card1{
-    padding-top:0px!important;
-  }
-}
-@media (max-width: $bp3){
+
+@media (max-width: 600px){
   .topinfo{
     .sec-1{
       width: 90%!important;
@@ -291,24 +326,14 @@ img{
   .sushi{
     width: 400px!important;
   }
-  .card2{
-    width: 400px;
-    margin: auto;
+  .img{
+    width: 300px!important;
+    margin: 0 auto!important;
 
     
   }
 }
 
-@media (max-width: 430px){
-  
-  .sushi{
-    width: 350px!important;
-  }
-  .card2{
-    width: 350px;
-    margin: auto;
-  }
-}
 @media (max-width: 430px){
   
   .sushi{
