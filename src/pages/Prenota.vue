@@ -864,7 +864,6 @@ export default {
         bottom: 0;
         width: 100%;
         padding: 10px;
-        height: calc(100% - 350px);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
