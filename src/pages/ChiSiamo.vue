@@ -85,6 +85,7 @@
           font-size: 80px;
           width: 100%;
           text-align: center;
+          padding: 1rem;
         }
         .cuoco1{
           position: relative;
@@ -231,6 +232,7 @@
       
       h1{
         font-size: 40px;
+
       }
     }
   }

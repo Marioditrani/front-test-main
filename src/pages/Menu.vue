@@ -217,7 +217,7 @@
         display: flex;
         justify-content: space-between;
         h1{
-          font-size: 60px!important;
+          font-size: 50px!important;
           padding-top: 2rem;
         }
         p{
@@ -506,7 +506,7 @@
       display: flex;
       justify-content: space-between;
       h1{
-        font-size: 60px!important;
+        font-size: 40px!important;
         
       }
   
@@ -533,7 +533,7 @@
       
       
       h1{
-        font-size: 50px!important;
+        font-size: 40px!important;
       }
       .bac-respo{
         margin-right: 25px!important;
