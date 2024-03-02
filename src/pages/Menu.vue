@@ -234,7 +234,7 @@
       .menu-bottom{
       @include dfc;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0rem;
       align-items: stretch;
       padding-bottom: 300px;
       .card{
@@ -486,7 +486,7 @@
     }
     
     .card{
-    margin-top: 20rem!important;
+    margin-top: 200px!important;
     width: 55% !important;
   }
   .menu-left{

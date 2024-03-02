@@ -722,6 +722,24 @@ export default {
   background-color: $c-nav-link;
   border: 2px solid $c-header;
 }
+.cart::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.cart::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: $c-header;
+}
+.cart::-webkit-scrollbar-track {
+  border-radius: 20px;
+  background: rgba(52, 4, 7, 0.786);
+}
+.cart::-webkit-scrollbar-thumb:hover {
+  border-radius: 20px;
+  background-color: $c-nav-link;
+  border: 2px solid $c-header;
+}
 .hd {
   box-shadow: 10px 10px 10px black;
 }
@@ -784,7 +802,7 @@ export default {
       @include dfc;
       margin: 5rem 0;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0rem;
 
       .card-default {
         width: calc((75% - 2rem) / 3);
@@ -797,7 +815,7 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        margin: 6rem 1rem;
+        margin: 50px 1rem;
         margin-bottom: 130px;
 
         img {
