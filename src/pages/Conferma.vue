@@ -1,5 +1,6 @@
 <script>
 import { state } from "../state.js";
+
 import axios from "axios";
 
 import AppCalendar from "../components/AppCalendar.vue";
@@ -20,6 +21,10 @@ export default {
         telefono: null,
         messaggio: "",
         privacy: false,
+        delivery: false,
+        comune: "",
+        civico: "",
+        indirizzo: "",
       },
       inputs: [
         {
@@ -38,11 +43,27 @@ export default {
           type: "text",
         },
         {
+          name: "comune",
+          label: "Città ",
+          type: "select",
+        },
+        {
+          name: "indirizzo",
+          label: "Indirizzo",
+          type: "text",
+        },
+        {
+          name: "civico",
+          label: "N° civico *",
+          type: "text",
+        },
+        {
           name: "messaggio",
           label: "Messaggio",
           type: "text",
         },
       ],
+      settings: [],
       cartError: "",
       loading: false,
     };
@@ -67,18 +88,22 @@ export default {
     },
     getTot() {
       this.state.totCart = 0;
-      this.state.nPezzi = 0;
+      this.state.nPezzi[0] = 0;
+      this.state.nPezzi[1] = 0;
       this.state.arrCart.forEach((element) => {
         this.state.totCart = this.state.totCart + element.totprice;
-        this.state.nPezzi += parseInt(element.slot) * element.counter
+        if(element.type == 'q'){
+          this.state.nPezzi[0] +=( parseInt(element.slot) * element.counter);
+        }else if(element.type == 't'){
+          console.log(this.state.nPezzi)
+          this.state.nPezzi[1] += (parseInt(element.slot) * element.counter)
+        }
+
       }); 
     },
     getPrice(cent, sum) {
       if (sum) {
-        // console.log(cent)
-        // console.log(sum)
         let num1 = parseFloat(cent);
-
         let num = (num1 + sum) / 100;
         num = "€" + num;
         return num;
@@ -90,10 +115,12 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
     localStorage.getItem("cart") &&
       (this.state.arrCart = JSON.parse(localStorage.getItem("cart")));
-    this.getTot;
+    this.getTot();
+    const settings = await axios.get(state.baseUrl + "api/setting", {});
+    this.settings = settings.data.results;
   },
 };
 </script>
@@ -271,6 +298,7 @@ export default {
       border-radius: 30px;
       padding: 1rem;
       margin: 0 auto;
+      width: 60%;
       .top-cart {
         padding: 0.2rem;
         @include dfc;

@@ -2,13 +2,14 @@
 const { log } = console;
 import { state } from "../state";
 import axios from "axios";
-import { monthConvert, numberInCalendar } from "../utilities/functions";
+import { monthConvert } from "../utilities/functions";
 import { validateReservation } from "../assets/validations/val_prenotaServizio";
 import { order_validations } from "../assets/validations/val_conferma";
 import AppMessageOverlay from "./AppMessageOverlay.vue";
 import AppLoader from "./AppLoader.vue";
+import AppLoaderFull from "./AppLoaderFull.vue";
 export default {
-  components: { AppMessageOverlay, AppLoader },
+  components: { AppMessageOverlay, AppLoader, AppLoaderFull },
   props: {
     formValues: {
       type: Object,
@@ -30,31 +31,46 @@ export default {
       calendar: {}, // calendar = {"Gennaio" : [{objDate} ...]}, {"Febbraio" : [{objDate} ...]}, ... }
       dayTimes: [], // Fasce orarie per il giorno selezionato
       dateId: null, // ID della data scelta
-      seats: "Seleziona un orario per vedere le disponibilità", // usato sia per i posti che per i pezzi
+      seats: [
+        "Seleziona un orario per vedere le disponibilità", // usato sia per i posti che per i pezzi
+        "", // usato sia per i posti che per i pezzi
+      ],
       isValid: [],
       firstDayOfMonth: 1, // Giorno della settimana con cui inizia il mese selez.
       daysWeek: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
+      settings: [],
       success: true,
       loader: false,
+      loaderFull: false,
       loaderSeat: false,
       message: false,
+      _delivery: false,
+      arrAddress: [],
     };
   },
   methods: {
     // Chiamata API
     async getDates() {
-      const dates = await axios.get(state.baseUrl + "api/dates");
+      this.loaderFull = true;
+      let params = {};
+      if (this.reservation) {
+        params = { wcf: "0" };
+      } else if (!this.reservation && !this.formValues.delivery) {
+        params = { wcf: "1" };
+      } else if (!this.reservation && this.formValues.delivery) {
+        params = { wcf: "2" };
+      }
+      const dates = await axios.get(state.baseUrl + "api/dates", {
+        params,
+      });
       this.currentDate = dates.data.data_e_ora_attuali;
       this.calendar = this.getCalendar(dates.data.results);
+      this.loaderFull = false;
       this.initialDates = dates.data.results;
     },
 
     // Elaborare i dati in arrivo e formattarli in un calendario (obj)
     getCalendar(arrDates) {
-      const _status = this.reservation ? 1 : 2;
-
-      arrDates = arrDates.filter((day) => day.status !== _status);
-
       // Sostituisco i numeri con i nomi dei mesi
       for (let i = 0; i < arrDates.length; i++) {
         arrDates[i].month = monthConvert(arrDates[i].month);
@@ -78,21 +94,18 @@ export default {
     async getRequest() {
       this.errorValidation = "";
       this.isValid = this.reservation
-        ? validateReservation(this.formValues)
-        : order_validations(this.formValues, this.state.maxPezzi, this.state.nPezzi);
+        ? validateReservation(this.formValues, this.state.maxPosti)
+        : order_validations(
+            this.formValues,
+            this.state.maxPosti,
+            this.state.nPezzi
+          );
 
       if (this.isValid.length !== 0) {
         return;
       }
       this.message = true;
       this.loader = true;
-
-      // Compongo la data intera con orario (formato dd/mm/yyyy hh:mm)
-      const time_slot = `${numberInCalendar(
-        this.formValues.giorno
-      )}/${numberInCalendar(monthConvert(this.formValues.mese))}/${
-        this.formValues.anno
-      } ${this.formValues.orario}`;
 
       await this.findIdRequest();
       try {
@@ -102,18 +115,19 @@ export default {
           email: this.formValues.email,
           n_person: this.formValues.n_persone,
           message: this.formValues.messaggio,
-          date_slot: time_slot,
           date_id: this.dateId,
           privacy: this.formValues.privacy,
         };
-        
+
         const _order = {
           name: this.formValues.nome,
           phone: this.formValues.telefono,
           email: this.formValues.email,
           message: this.formValues.messaggio,
+          comune: this.formValues.comune,
+          indirizzo: this.formValues.indirizzo,
+          civico: this.formValues.civico,
           products: this.state.getServeCart(),
-          date_slot: time_slot,
           date_id: this.dateId,
           privacy: this.formValues.privacy,
           totPrice: this.state.totCart,
@@ -126,16 +140,21 @@ export default {
             _reservation
           );
           this.loader = false;
-          this.success && (this.formValues.n_persone = "");
-
+          this.success = data.data.success;
+          console.log(this.success);
+          console.log(data.status);
+          console.log(data);
           // SE AVVIENE UN ORDINE D'ASPORTO
         } else {
           const data = await axios.post(state.baseUrl + "api/orders", _order);
+          this.success = data.data.success;
           this.loader = false;
-          localStorage.clear();
-          setTimeout(() => {
-            this.$router.replace("/prenota");
-          }, 2000);
+          if (this.success) {
+            localStorage.clear();
+            setTimeout(() => {
+              this.$router.replace("/prenota");
+            }, 2000);
+          }
         }
 
         if (this.success) {
@@ -148,6 +167,7 @@ export default {
           this.formValues.telefono = "";
           this.formValues.messaggio = "";
           this.formValues.privacy = false;
+          this.formValues.n_persone = "";
           this.state.arrCart = [];
           this.state.totCart = 0;
         }
@@ -171,7 +191,7 @@ export default {
       const params = {
         year: this.formValues.anno,
         month: mese,
-        day: +this.formValues.giorno,
+        day: this.formValues.giorno,
         time: this.formValues.orario,
       };
       try {
@@ -183,14 +203,17 @@ export default {
           const { id, reserved, max_res } = data.data.results[0];
           this.dateId = id;
           // Imposto il num di posti disponibili per l'orario scelto
-          this.seats = max_res - reserved;
-          this.state.maxPezzi = this.seats;
+          this.seats[0] = max_res - reserved;
+          this.state.maxPosti[0] = max_res - reserved;
         } else {
-          const { id, reserved_pz, max_pz } = data.data.results[0];
+          const { id, reserved_pz_q, max_pz_q, reserved_pz_t, max_pz_t } =
+            data.data.results[0];
           this.dateId = id;
           // Imposto il num di pezzi disponibili per l'orario scelto
-          this.seats = max_pz - reserved_pz;
-          this.state.maxPezzi = this.seats;
+          this.seats[0] = max_pz_q - reserved_pz_q;
+          this.seats[1] = max_pz_t - reserved_pz_t;
+          this.state.maxPosti[0] = max_pz_q - reserved_pz_q;
+          this.state.maxPosti[1] = max_pz_t - reserved_pz_t;
         }
       } catch (data) {
         if (data.code == "ERR_NETWORK") {
@@ -220,25 +243,9 @@ export default {
         // Aggiungi l'orario e il giorno della settimana all'array
         grouped[item.day].times.push({
           time: item.time,
-          visible: item.visible,
         });
         grouped[item.day].day_w = item.day_w;
       });
-
-      for (const key in grouped) {
-        const el = grouped[key];
-        let _day_visible = true;
-
-        for (let z = 0; z < el.times.length; z++) {
-          const element = el.times[z];
-          if (!element.visible) {
-            _day_visible = false;
-            break; // Se uno degli elementi è visibile, non c'è bisogno di controllare gli altri
-          }
-        }
-
-        el.day_visible = _day_visible;
-      }
 
       return grouped;
     },
@@ -294,10 +301,62 @@ export default {
       this.loader = false;
       this.message = false;
     },
+
+    showInput(inputName, text, select) {
+      if (text && inputName === "messaggio") {
+        return true;
+      } else if (select && inputName === "comune") {
+        if (this.formValues.delivery) {
+          return true;
+        }
+      } else if (
+        !select &&
+        !text &&
+        (inputName == "nome" ||
+          inputName == "telefono" ||
+          inputName == "email" ||
+          inputName == "n_persone")
+      ) {
+        return true;
+      } else if (
+        !select &&
+        !text &&
+        this.formValues.delivery &&
+        inputName !== "comune" &&
+        inputName !== "messaggio"
+      ) {
+        return true;
+      }
+    },
+
+    showTimes(time) {
+      if (!this.reservation) {
+        return time.visible_domicilio;
+      }
+    },
+    async changeDelivery() {
+      this.formValues.delivery = !this.formValues.delivery;
+      this.calendar = {};
+      this.dayTimes = [];
+      this.dateId = null;
+      this.seats = ["Seleziona un orario per vedere le disponibilità", ""];
+      await this.getDates();
+      if (this.formValues.delivery) {
+        let data = await axios.get(state.baseUrl + "api/addresses");
+        this.arrAddress = data.data.results;
+      }
+      this.getFirstMonthAndYearValues();
+    },
   },
+
   async created() {
     await this.getDates();
     this.getFirstMonthAndYearValues();
+    const settings = await axios.get(state.baseUrl + "api/setting", {});
+    this.state.setting = settings.data.results;
+    if (this.state.setting[3].status) {
+      this._delivery = true;
+    }
   },
   watch: {
     "formValues.mese": function () {
@@ -306,11 +365,11 @@ export default {
       if (this.formValues.giorno) {
         this.formValues.giorno = "";
       }
-      this.seats = "Seleziona un orario per vedere le disponibilità";
+      this.seats = ["Seleziona un orario per vedere le disponibilità", ""];
     },
 
     "formValues.giorno": function () {
-      this.seats = "Seleziona un orario per vedere le disponibilità";
+      this.seats = ["Seleziona un orario per vedere le disponibilità", ""];
       if (this.formValues.orario) {
         this.formValues.orario = "";
       }
@@ -322,6 +381,17 @@ export default {
 <template>
   <h1>{{ reservation ? "Prenota il tuo tavolo" : `Procedi all'ordine` }}</h1>
   <div class="container_servizio">
+    <div v-if="!reservation && _delivery" class="delivery">
+      <div
+        :class="formValues.delivery ? 'my-check-on' : 'my-check'"
+        @click="changeDelivery"
+        name="delivery"
+      >
+        <div class="int"></div>
+      </div>
+      <span @click="changeDelivery" for="delivery">Consegna a domicilio</span>
+    </div>
+
     <section class="month-container">
       <h2>Seleziona il mese</h2>
       <div class="months">
@@ -383,10 +453,8 @@ export default {
           visible: dayTimes.length !== 0,
         }"
       >
-        <template v-for="(time, i) in dayTimes">
+        <template :key="i" v-for="(time, i) in dayTimes">
           <div
-            v-if="time.visible"
-            :key="i"
             @click="getSeats(time.time)"
             :class="{
               time: true,
@@ -397,24 +465,19 @@ export default {
           </div>
         </template>
       </div>
-      <div
-        v-if="!loaderSeat"
-        :class="{
-          seats: seats > 3,
-          last_seats: seats <= 3,
-        }"
-      >
-        {{ seats }}
-        <span
-          v-if="formValues.orario"
-          :class="{
-            seats: seats > 3,
-            last_seats: seats <= 3,
-          }"
-        >
-          {{ reservation ? "posti disponibili" : "pezzi disponibili" }}
+      <div v-if="!loaderSeat">
+        {{ seats[0] }}
+        <span v-if="formValues.orario">
+          {{
+            reservation ? "posti disponibili" : "pezzi al taglio disponibili"
+          }}
         </span>
       </div>
+      <div v-if="!loaderSeat && !reservation">
+        {{ seats[1] }}
+        <span v-if="formValues.orario"> pizze al piatto disponibili </span>
+      </div>
+
       <app-loader v-else :show="loaderSeat" />
     </section>
 
@@ -422,17 +485,22 @@ export default {
       <h2>Inserisci i tuoi dati</h2>
       <!-- Nome  -->
       <template v-for="(input, i) in inputs" :key="i">
-        <label :for="input.name">{{ input.label }}</label>
+        <label v-if="showInput(input.name)" :for="input.name">{{
+          input.label
+        }}</label>
         <input
-          v-if="input.name !== `messaggio`"
+          v-if="showInput(input.name)"
           :name="input.name"
           :type="input.type"
           :id="input.name"
           :value="formValues[input.name]"
           @input="(e) => handleInputValue(e, input.name)"
         />
+        <label v-if="showInput(input.name, true)" :for="input.name">{{
+          input.label
+        }}</label>
         <textarea
-          v-else
+          v-if="showInput(input.name, true)"
           :name="input.name"
           :id="input.name"
           :value="formValues[input.name]"
@@ -441,16 +509,39 @@ export default {
           rows="10"
         >
         </textarea>
+        <label v-if="showInput(input.name, false, true)" :for="input.name">{{
+          input.label
+        }}</label>
+        <select
+          v-if="showInput(input.name, false, true)"
+          :name="input.name"
+          :id="input.name"
+          :value="formValues[input.name]"
+          @change="(e) => handleInputValue(e, input.name)"
+        >
+          <option value="0">seleziona un comune</option>
+          <option
+            v-for="item in arrAddress"
+            :key="item.comune"
+            :value="item.comune"
+          >
+            {{ item.comune }}
+          </option>
+        </select>
       </template>
 
       <div class="privacy">
-
-        <div :class="formValues.privacy ? 'my-check-on' : 'my-check'" @click="formValues.privacy = !formValues.privacy" name="privacy">
+        <div
+          :class="formValues.privacy ? 'my-check-on' : 'my-check'"
+          @click="formValues.privacy = !formValues.privacy"
+          name="privacy"
+        >
           <div class="int"></div>
         </div>
         <span @click="formValues.privacy = !formValues.privacy" for="privacy"
           >Ho letto e accetto la politica sulla privacy ai sensi del Regolamento
-          EU n. 679/2016</span>
+          EU n. 679/2016</span
+        >
       </div>
 
       <div>I campi contrassegnati con * sono obbligatori</div>
@@ -501,6 +592,8 @@ export default {
       }"
       @toggle_message="toggleMessage"
     />
+
+    <AppLoaderFull v-if="loaderFull" />
   </div>
 </template>
 
@@ -753,4 +846,4 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
   box-shadow: inset 0 0 20px 20px #23232329;
 }
-</style>
+</style>./AppLoader copy.vue./AppMessageOverlay copy.vue

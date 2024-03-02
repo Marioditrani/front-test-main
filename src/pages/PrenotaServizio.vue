@@ -2,7 +2,7 @@
 
 import AppCalendar from "../components/AppCalendar.vue";
 export default {
-  components: { AppCalendar,  },
+  components: { AppCalendar},
   data() {
     return {
       reservationValues: {
