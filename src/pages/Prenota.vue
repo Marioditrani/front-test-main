@@ -810,7 +810,7 @@ export default {
         @include dfc;
         align-items: stretch;
         border-radius: 10px;
-        padding: 20px;
+        padding: 20px 0px;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -1374,9 +1374,7 @@ export default {
 
 @media (max-width: 700px) {
  
-  .card-show{
-    
-  }
+  
 }
 @media (max-width: 560px) {
   .cart{
@@ -1388,7 +1386,7 @@ export default {
 }
 @media (max-width: $bp2) {
   .card-default {
-    width: 95% !important;
+    width: 100% !important;
   }
 }
 </style>
