@@ -412,7 +412,7 @@ export default {
     <div class="prenota-cont">
       <img src="../assets/img/crop.png" alt="" class="bacchette">
       <div class="top-prenota">
-        <h1>Prenota il tuo Asporto</h1>
+        <h1>Prenota il tuo Asport</h1>
         <div class="one-category" @click="catopen" :class="categoryinput ? '': 'cat-off'">
           <span v-for="(cat,i) in arrCategory" :key="i">{{ namecategory(cat.name, i)}}</span>
         </div>
@@ -864,6 +864,7 @@ export default {
         }
       }
       .overlay {
+        padding-bottom: 50vh;
         position: fixed;
         z-index: 101;
         right: 0;
