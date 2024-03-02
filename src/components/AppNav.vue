@@ -679,7 +679,7 @@ height: 0%;
 }
 @media (max-width: 1300px) {
   .nav{
-    min-height: 150px!important;
+    height: 150px;
     .right-nav{
       display: none;
     }
