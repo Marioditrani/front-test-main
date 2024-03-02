@@ -727,19 +727,7 @@ export default {
   height: 10px;
 }
 
-.cart::-webkit-scrollbar-thumb {
-  border-radius: 20px;
-  background: $c-header;
-}
-.cart::-webkit-scrollbar-track {
-  border-radius: 20px;
-  background: rgba(52, 4, 7, 0.786);
-}
-.cart::-webkit-scrollbar-thumb:hover {
-  border-radius: 20px;
-  background-color: $c-nav-link;
-  border: 2px solid $c-header;
-}
+
 .hd {
   box-shadow: 10px 10px 10px black;
 }
