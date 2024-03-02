@@ -40,7 +40,7 @@
       <div class="card2">
         <div class="card2-left">
           <div class="topinfo" >
-            <h4>Orari d'apertura</h4>
+            <h1>Orari d'apertura</h1>
             <div class="sec-1">
                 <div class="cont-giorni">
                   <span>lunedì</span>
