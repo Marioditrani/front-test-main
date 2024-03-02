@@ -78,17 +78,19 @@
   width: 100%;
   padding: 50px 3rem ;
       .top-about{
-        align-items: start;
         display: flex;
         
+        
         h1{
-          font-size: 100px;
+          font-size: 80px;
           width: 100%;
           text-align: center;
         }
         .cuoco1{
           position: relative;
-            z-index: 1;
+          z-index: 1;
+          max-width: 350px;
+
         }
       }
       .post-container{
@@ -144,7 +146,7 @@
             position: relative;
             z-index: 3;
             width: 43%;
-            max-width: 400px;
+            max-width: 300px;
             box-shadow: 17px 10px 38px black;
           }
         }
@@ -192,7 +194,7 @@
   
       .top-about{
         h1{
-          font-size: 70px;
+          font-size: 60px;
         }
       }
     }
@@ -228,7 +230,7 @@
     .top-about{
       
       h1{
-        font-size: 50px;
+        font-size: 40px;
       }
     }
   }

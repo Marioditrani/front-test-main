@@ -787,8 +787,6 @@ export default {
       }
       h1 {
         text-align: center;
-        text-transform: uppercase;
-        padding: 1rem;
         font-size: 40px;
       }
     }
@@ -1387,6 +1385,7 @@ export default {
 @media (max-width: $bp2) {
   .card-default {
     width: 100% !important;
+    margin: 5rem 0!important;
   }
 }
 </style>

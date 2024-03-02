@@ -19,6 +19,11 @@ $c-bg: #070608;
 $c-panna: #EBD59B;
 $c-background: #270000;
 
+h1 {
+    font-size: clamp(1.9rem, 6vw, 2.5rem) !important;
+    text-transform: uppercase;
+}
+
 ///**MIXIN**///
 @mixin dfc {
     display: flex;

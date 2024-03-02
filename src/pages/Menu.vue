@@ -217,12 +217,11 @@
         display: flex;
         justify-content: space-between;
         h1{
-          text-transform: uppercase;
-          font-size: 80px;
+          font-size: 60px!important;
           padding-top: 2rem;
         }
         p{
-          font-size: 25px;
+          font-size: 20px;
          
         }
 
@@ -507,7 +506,7 @@
       display: flex;
       justify-content: space-between;
       h1{
-        font-size: 70px!important;
+        font-size: 60px!important;
         
       }
   
@@ -534,7 +533,7 @@
       
       
       h1{
-        font-size: 60px!important;
+        font-size: 50px!important;
       }
       .bac-respo{
         margin-right: 25px!important;
